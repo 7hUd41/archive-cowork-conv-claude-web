@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Archivage de la session Cowork</title>
+  <link rel="stylesheet" href="viewer.css">
+  <style>
+    header { position: sticky; top: 0; z-index: 5; background: rgba(243,239,231,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); padding: 14px 24px; }
+    h1 { font-size: 18px; margin: 0 0 2px; }
+    .sub { color: var(--muted); font-size: 13px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px; }
+    button:not(.btn) { padding: 8px 14px; font-size: 13px; font-weight: 600; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+    button.secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    button:not(.btn):disabled { background: #cfcac2; color: #fff; cursor: default; border: 0; }
+    .opts { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 12px; }
+    .bar { height: 6px; background: #e6e2da; border-radius: 3px; overflow: hidden; margin-top: 10px; }
+    .bar > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+    #log { font-family: "Fira Code", ui-monospace, Menlo, monospace; font-size: 11.5px; line-height: 1.5; white-space: pre-wrap; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; max-height: 160px; overflow: auto; margin: 16px auto 0; }
+    #log:empty { display: none; }
+    body.mode-hr #log { display: none; }
+    .ok { color: #2f7a3e; } .warn { color: #b26b00; } .err { color: #b3261e; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Archivage de la session</h1>
+      <div class="sub">Session <code id="sid">…</code></div>
+      <div class="toolbar">
+        <button id="fetchBtn">1. Récupérer la conversation</button>
+        <button id="zipBtn" disabled>2. Télécharger le ZIP</button>
+        <button id="zipDayBtn" disabled title="Un dossier par jour, chacun avec le .md complet du jour et ses images">ZIP par jour</button>
+        <button id="modeBtn" class="btn" data-mode="hr">Mode : lecture</button>
+        <span id="dayExport" hidden style="display:inline-flex;gap:6px;align-items:center;">
+          <select id="daySelect" style="padding:6px 8px;font-size:12.5px;border:1px solid var(--line);border-radius:8px;max-width:280px;"></select>
+          <button id="dayBtn" class="btn" disabled title="Exporter cette journée en .md, à redonner à Claude pour combler une compaction">Exporter ce jour (.md)</button>
+        </span>
+        <div class="opts">
+          <label><input type="checkbox" id="optImages" checked> images envoyées</label>
+          <label><input type="checkbox" id="optWritten" checked> fichiers écrits par Claude</label>
+          <label><input type="checkbox" id="optTranscript" checked> transcript.md + transcript.html</label>
+          <label><input type="checkbox" id="optTech"> afficher les événements techniques</label>
+        </div>
+      </div>
+      <div class="bar"><div id="progress"></div></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="log"></div>
+    <div id="summary"></div>
+  </div>
+  <div id="conv"></div>
+
+  <script src="jszip.min.js"></script>
+  <script src="viewer.js"></script>
+  <script src="archive.js"></script>
+</body>
+</html>

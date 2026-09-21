@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Cowork Session Archiver</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; width: 340px; margin: 0; padding: 16px; color: #1f1f1f; background: #faf9f6; }
+    h1 { font-size: 15px; margin: 0 0 12px; }
+    p { font-size: 13px; line-height: 1.45; margin: 0 0 10px; color: #444; }
+    code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: #eee; padding: 1px 4px; border-radius: 3px; }
+    label { display: block; font-size: 12px; margin: 10px 0 4px; color: #555; }
+    input[type=text] { width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 12px; font-family: ui-monospace, Menlo, monospace; border: 1px solid #ccc; border-radius: 6px; }
+    button { width: 100%; margin-top: 12px; padding: 9px; font-size: 13px; font-weight: 600; border: 0; border-radius: 8px; background: #c96442; color: #fff; cursor: pointer; }
+    button:disabled { background: #bbb; cursor: default; }
+    .hint { font-size: 11px; color: #777; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Cowork Session Archiver</h1>
+  <p id="detected">Recherche d'une session dans l'onglet actif…</p>
+  <label for="sessionId">Identifiant de session</label>
+  <input type="text" id="sessionId" placeholder="cse_… ou session_…" spellcheck="false">
+  <button id="archiveBtn" disabled>Archiver cette session</button>
+  <p class="hint">L'archive s'ouvre dans un nouvel onglet et se télécharge en ZIP. Tout se passe dans ton navigateur, avec ta session claude.ai déjà connectée.</p>
+  <script src="popup.js"></script>
+</body>
+</html>
