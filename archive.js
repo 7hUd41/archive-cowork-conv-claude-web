@@ -221,8 +221,11 @@ function extractDeliveredFiles(events) {
 
 // ---------- Transcript lisible ----------
 
+// Fuseau horaire d'affichage : par défaut celui du navigateur ; le viewer local peut l'imposer (window.DISPLAY_TZ, ex. 'America/Toronto').
+function TZ() { return (typeof window !== 'undefined' && window.DISPLAY_TZ) || undefined; }
+function tzLabel() { return TZ() || Intl.DateTimeFormat().resolvedOptions().timeZone || 'fuseau du navigateur'; }
 function fmtDate(iso) {
-  try { return new Date(iso).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }); } catch (_) { return iso || ''; }
+  try { return new Date(iso).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short', timeZone: TZ() }); } catch (_) { return iso || ''; }
 }
 
 function truncate(s, n) { s = String(s); return s.length > n ? s.slice(0, n) + ' […]' : s; }
@@ -266,7 +269,7 @@ function summarizeToolInput(name, input) {
 function buildTranscript(sessionId, events, meta) {
   const lines = [];
   const title = (meta && (meta.title || meta.name)) || sessionId;
-  lines.push(`# ${title}`, '', `Session : \`${sessionId}\`  `, `Archivé le : ${fmtDate(new Date().toISOString())}  `, `Événements : ${events.length}`, '', '---', '');
+  lines.push(`# ${title}`, '', `Session : \`${sessionId}\`  `, `Archivé le : ${fmtDate(new Date().toISOString())}  `, `Événements : ${events.length}  `, `Fuseau horaire des heures affichées : ${tzLabel()} (les horodatages bruts d'events.json sont en UTC)`, '', '---', '');
 
   const toolNames = new Map();
   let imgCounter = 0;
@@ -344,10 +347,10 @@ function el(tag, cls, text) {
 }
 
 function fmtTime(iso) {
-  try { return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; }
+  try { return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ() }); } catch (_) { return ''; }
 }
 function fmtDay(iso) {
-  try { return new Date(iso).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); } catch (_) { return ''; }
+  try { return new Date(iso).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: TZ() }); } catch (_) { return ''; }
 }
 function fmtDuration(ms) {
   if (!ms) return '';
@@ -424,8 +427,8 @@ function toolHeadline(name, input) {
 function fmtFull(iso) {
   try {
     const d = new Date(iso);
-    const day = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short', year: '2-digit' });
-    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const day = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short', year: '2-digit', timeZone: TZ() });
+    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ() });
     return `${day} à ${time}`;
   } catch (_) { return iso || ''; }
 }
@@ -741,6 +744,7 @@ function renderPreview(state) {
   const title = meta && (meta.title || meta.name);
   if (title) row('Titre', title);
   row('Période', events.length ? `${fmtFull(events[0].created_at)} → ${fmtFull(events[events.length - 1].created_at)}` : '—');
+  if (TZ()) row('Fuseau', `heures affichées en ${TZ()} (horodatages bruts en UTC)`);
   row('Événements', `${events.length} (séquences ${Math.min(...seqs)} → ${Math.max(...seqs)})`);
   row('Messages', `${userCount} de vous · ${claudeCount} de Claude · ${turnCount} tours`);
   row('Activité', `${toolCount} appel(s) d'outil · ${imgCount} image(s) envoyée(s)`);
@@ -823,7 +827,7 @@ async function fetchB64(path) {
 
 // Construit transcript.html : même aperçu, mêmes fonctions, polices embarquées, mode lecture par défaut.
 function dayKey(iso) {
-  try { return new Date(iso).toLocaleDateString('en-CA'); } catch (_) { return (iso || '').slice(0, 10); }
+  try { return new Date(iso).toLocaleDateString('en-CA', { timeZone: TZ() }); } catch (_) { return (iso || '').slice(0, 10); }
 }
 
 // Liste des jours présents (clé locale AAAA-MM-JJ) avec libellé lisible et nombre de messages.
@@ -850,7 +854,7 @@ function buildDayMarkdown(sessionId, events, meta, key) {
   const title = (meta && (meta.title || meta.name)) || sessionId;
   const label = day.length ? fmtDay(day[0].created_at) : key;
   const lines = [];
-  lines.push(`# ${title} — journée du ${label}`, '');
+  lines.push(`# ${title} — journée du ${label}`, '', `Fuseau horaire : ${tzLabel()} (journée découpée dans ce fuseau ; horodatages bruts en UTC)`, '');
   lines.push(`> Extrait d'archive Cowork (session \`${sessionId}\`), **journée complète**, destiné à être redonné à Claude pour réingérer cette journée après une compaction de mi-journée. Texte intégral, rien n'est résumé.`, '');
   if (seqs.length) lines.push(`> Séquences #${Math.min(...seqs)} à #${Math.max(...seqs)}.`, '');
   lines.push('---', '');
@@ -981,6 +985,7 @@ async function doZip() {
     const manifest = {
       archiver: 'Cowork Session Archiver 0.9.2',
       captured_at: new Date().toISOString(),
+      display_timezone: tzLabel(),
       session_id: sessionId,
       endpoint: `${API_BASE}${sessionId}/events`,
       pagination_param_used: cursorParam,
