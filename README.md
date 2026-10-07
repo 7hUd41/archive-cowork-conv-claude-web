@@ -11,6 +11,22 @@ Companion projects:
 - [archive-cowork-conv-claude-desktop](https://github.com/7hUd41/archive-cowork-conv-claude-desktop) — the same engine for the **local** Cowork sessions stored by the Claude desktop app, with projects and a session index.
 - [archive-cowork-conv-claude-export-viewer](https://github.com/7hUd41/archive-cowork-conv-claude-export-viewer) — a lightweight page that reopens a ZIP produced by either tool.
 
+## Screenshots
+
+The popup detects the session from the active tab:
+
+<img src="docs/popup.png" alt="Popup: session detected in the active tab" width="372">
+
+The archive page in **reading** mode — chat-style preview, day separators, compaction summary flagged as a distinct card:
+
+![Archive page, reading mode](docs/archive-reading.png)
+
+The same session in **full details** mode with technical events shown — timestamps, sequence numbers, model, tool parameters and results, end-of-turn markers:
+
+![Archive page, full details mode](docs/archive-full.png)
+
+(All screenshots use the synthetic fixtures from `tests/`, not a real conversation.)
+
 ## What you get
 
 ```
