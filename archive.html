@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- Cowork Session Archiver — archive.html · authors: 7hud41 · license: MIT -->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Archivage de la session Cowork</title>
+  <title data-i18n="Cowork session archive">Cowork session archive</title>
   <link rel="stylesheet" href="viewer.css">
   <style>
     header { position: sticky; top: 0; z-index: 5; background: rgba(243,239,231,.96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); padding: 14px 24px; }
@@ -19,28 +20,30 @@
     #log:empty { display: none; }
     body.mode-hr #log { display: none; }
     .ok { color: #2f7a3e; } .warn { color: #b26b00; } .err { color: #b3261e; }
-
+    select.ctl { padding: 6px 8px; font-size: 12.5px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .lang { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <h1>Archivage de la session</h1>
-      <div class="sub">Session <code id="sid">…</code></div>
+      <h1 data-i18n="Archiving session">Archiving session</h1>
+      <div class="sub"><span data-i18n="Session">Session</span> <code id="sid">…</code></div>
       <div class="toolbar">
-        <button id="fetchBtn">1. Récupérer la conversation</button>
-        <button id="zipBtn" disabled>2. Télécharger le ZIP</button>
-        <button id="zipDayBtn" disabled title="Un dossier par jour, chacun avec le .md complet du jour et ses images">ZIP par jour</button>
-        <button id="modeBtn" class="btn" data-mode="hr">Mode : lecture</button>
+        <button id="fetchBtn" data-i18n="1. Fetch the conversation">1. Fetch the conversation</button>
+        <button id="zipBtn" disabled data-i18n="2. Download ZIP">2. Download ZIP</button>
+        <button id="zipDayBtn" disabled data-i18n="ZIP by day" data-i18n-title="One folder per day, each with the full .md of that day and its images">ZIP by day</button>
+        <button id="modeBtn" class="btn" data-mode="hr">Mode: reading</button>
         <span id="dayExport" hidden style="display:inline-flex;gap:6px;align-items:center;">
-          <select id="daySelect" style="padding:6px 8px;font-size:12.5px;border:1px solid var(--line);border-radius:8px;max-width:280px;"></select>
-          <button id="dayBtn" class="btn" disabled title="Exporter cette journée en .md, à redonner à Claude pour combler une compaction">Exporter ce jour (.md)</button>
+          <select id="daySelect" class="ctl" style="max-width:280px;"></select>
+          <button id="dayBtn" class="btn" disabled data-i18n="Export this day (.md)" data-i18n-title="Export this day as .md, ready to feed back to Claude after a compaction">Export this day (.md)</button>
         </span>
+        <span class="lang"><label for="langSelect" data-i18n="Language">Language</label><select id="langSelect" class="ctl"></select></span>
         <div class="opts">
-          <label><input type="checkbox" id="optImages" checked> images envoyées</label>
-          <label><input type="checkbox" id="optWritten" checked> fichiers écrits par Claude</label>
-          <label><input type="checkbox" id="optTranscript" checked> transcript.md + transcript.html</label>
-          <label><input type="checkbox" id="optTech"> afficher les événements techniques</label>
+          <label><input type="checkbox" id="optImages" checked> <span data-i18n="uploaded images">uploaded images</span></label>
+          <label><input type="checkbox" id="optWritten" checked> <span data-i18n="files written by Claude">files written by Claude</span></label>
+          <label><input type="checkbox" id="optTranscript" checked> <span data-i18n="transcript.md + transcript.html">transcript.md + transcript.html</span></label>
+          <label><input type="checkbox" id="optTech"> <span data-i18n="show technical events">show technical events</span></label>
         </div>
       </div>
       <div class="bar"><div id="progress"></div></div>
@@ -54,6 +57,7 @@
   <div id="conv"></div>
 
   <script src="jszip.min.js"></script>
+  <script src="i18n.js"></script>
   <script src="viewer.js"></script>
   <script src="archive.js"></script>
 </body>

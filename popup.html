@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- Cowork Session Archiver — popup.html · authors: 7hud41 · license: MIT -->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Cowork Session Archiver</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; width: 340px; margin: 0; padding: 16px; color: #1f1f1f; background: #faf9f6; }
-    h1 { font-size: 15px; margin: 0 0 12px; }
+    h1 { font-size: 15px; margin: 0 0 12px; display: flex; align-items: center; justify-content: space-between; }
+    h1 select { font-size: 11px; font-weight: 400; border: 1px solid #ccc; border-radius: 6px; padding: 2px 4px; background: #fff; }
     p { font-size: 13px; line-height: 1.45; margin: 0 0 10px; color: #444; }
     code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: #eee; padding: 1px 4px; border-radius: 3px; }
     label { display: block; font-size: 12px; margin: 10px 0 4px; color: #555; }
@@ -16,12 +18,13 @@
   </style>
 </head>
 <body>
-  <h1>Cowork Session Archiver</h1>
-  <p id="detected">Recherche d'une session dans l'onglet actif…</p>
-  <label for="sessionId">Identifiant de session</label>
-  <input type="text" id="sessionId" placeholder="cse_… ou session_…" spellcheck="false">
-  <button id="archiveBtn" disabled>Archiver cette session</button>
-  <p class="hint">L'archive s'ouvre dans un nouvel onglet et se télécharge en ZIP. Tout se passe dans ton navigateur, avec ta session claude.ai déjà connectée.</p>
+  <h1><span data-i18n="Cowork Session Archiver">Cowork Session Archiver</span><select id="langSelect" title="Language"></select></h1>
+  <p id="detected" data-i18n="Looking for a session in the active tab…">Looking for a session in the active tab…</p>
+  <label for="sessionId" data-i18n="Session id">Session id</label>
+  <input type="text" id="sessionId" placeholder="cse_… or session_…" data-i18n-placeholder="cse_… or session_…" spellcheck="false">
+  <button id="archiveBtn" disabled data-i18n="Archive this session">Archive this session</button>
+  <p class="hint" data-i18n="The archive opens in a new tab and downloads as a ZIP. Everything happens in your browser, with your existing claude.ai session.">The archive opens in a new tab and downloads as a ZIP. Everything happens in your browser, with your existing claude.ai session.</p>
+  <script src="i18n.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+  "name": "archive-cowork-conv-claude-web",
+  "version": "0.9.2",
+  "description": "Chrome extension that archives a claude.ai Cowork session as a complete ZIP",
+  "author": "7hud41",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "pack": "zip -r cowork-session-archiver.zip manifest.json popup.html popup.js archive.html archive.js viewer.css viewer.js i18n.js jszip.min.js icon16.png icon48.png icon128.png fonts"
+  },
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  }
+}

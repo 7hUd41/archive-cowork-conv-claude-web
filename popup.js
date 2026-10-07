@@ -1,3 +1,9 @@
+// Cowork Session Archiver — popup.js
+// authors: 7hud41
+// license: MIT
+//
+// Detects the session id in the active claude.ai tab and opens the archive page for it.
+
 const SESSION_RE = /\/(?:cowork|code)\/((?:cse|session)_[A-Za-z0-9]+)/;
 
 function extractSessionId(url) {
@@ -7,6 +13,7 @@ function extractSessionId(url) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initLang();
   const detected = document.getElementById('detected');
   const input = document.getElementById('sessionId');
   const btn = document.getElementById('archiveBtn');
@@ -14,13 +21,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const id = extractSessionId(tab && tab.url);
 
-  if (id) {
-    input.value = id;
-    detected.innerHTML = 'Session détectée : <code>' + id + '</code>';
-    btn.disabled = false;
-  } else {
-    detected.textContent = "Aucune session Cowork dans l'onglet actif. Ouvre une page claude.ai/cowork/cse_… ou colle l'identifiant ci-dessous.";
-  }
+  const showDetected = () => {
+    detected.removeAttribute('data-i18n');
+    detected.textContent = '';
+    if (id) {
+      detected.appendChild(document.createTextNode(t('Session detected: ')));
+      const code = document.createElement('code'); code.textContent = id; detected.appendChild(code);
+    } else {
+      detected.textContent = t('No Cowork session in the active tab. Open a claude.ai/cowork/cse_… page or paste the id below.');
+    }
+  };
+  showDetected();
+  window.onLangChange = showDetected;
+  if (id) { input.value = id; btn.disabled = false; }
 
   input.addEventListener('input', () => {
     btn.disabled = !/^(cse|session)_[A-Za-z0-9]+$/.test(input.value.trim());
